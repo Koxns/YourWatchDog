@@ -81,10 +81,4 @@ Start breaking, keep learning.
 
 ---
 
-## License
-
-MIT
-
----
-
 Abdul Rahaman — Koxns
