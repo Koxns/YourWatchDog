@@ -8,11 +8,13 @@ The goal is simple — show you how ransomware actually behaves, and how detecti
 
 ## What's inside
 
-`attack.py` — a safe simulator that mimics ransomware behavior by rapidly renaming files in a folder you choose. No encryption, no real damage, fully reversible. You need to pause Windows real-time protection to run it — and that's the point. The moment your guard is down, even a basic script can cause chaos.
+`attack.py` — simulates ransomware behavior by encrypting files in a folder you choose. You need to pause Windows real-time protection to run it — and that's the point. The moment your guard is down, even a basic script can cause chaos. The key is saved locally so everything is recoverable.
 
-`shield.py` — watches the same folder and detects the mass file renaming pattern. When it triggers, it freezes the process, asks what you want to do, and restores everything from a backup it made earlier.
+`shield.py` — watches the same folder in real time. When it detects mass file modifications, it freezes the suspicious process, asks what you want to do, and restores everything from a backup it made earlier.
 
-Together they show you the full picture — attack and defense, back to back, in real time.
+`decrypt.py` — if any files got encrypted before the shield caught the attack, run this to recover them. It uses the same key that attack.py saved locally.
+
+Together they show you the full picture — attack, defense, and recovery, back to back, in real time.
 
 ---
 
@@ -23,7 +25,7 @@ You need Python 3.8 or newer. Download from python.org and check *Add Python to 
 Install dependencies:
 
 ```
-pip install watchdog psutil setproctitle
+pip install watchdog psutil setproctitle cryptography
 ```
 
 Clone the repo:
@@ -51,9 +53,21 @@ In a new terminal, run the attack:
 python attack.py
 ```
 
-**Before running attack.py — pause Windows real-time protection temporarily.** Settings → Windows Security → Virus & threat protection → turn off real-time protection. Turn it back on after the demo.
+Before running attack.py — pause Windows real-time protection temporarily. Settings → Windows Security → Virus & threat protection → turn off real-time protection. Turn it back on after the demo.
 
 Watch what happens. The shield catches it, kills the process, and restores your files.
+
+---
+
+## If files got encrypted before the shield caught it
+
+Run decrypt.py to recover everything:
+
+```
+python decrypt.py
+```
+
+It will ask which folder to decrypt. Make sure simulation_key.key is in the same folder as decrypt.py — attack.py saves it there automatically.
 
 ---
 
@@ -65,13 +79,14 @@ python shield.py --start        start monitoring in background
 python shield.py --stop         stop
 python shield.py --status       check if running
 python shield.py --uninstall    remove everything
+python decrypt.py               recover files after demo
 ```
 
 ---
 
 ## Why I built this
 
-I wanted to understand how ransomware detection actually works — not just read about it. So I built both sides. The attacker and the defender.
+I wanted to understand how ransomware detection actually works — not just read about it. So I built all three sides. The attacker, the defender, and the recovery.
 
 The real lesson here isn't the code. It's that most successful ransomware attacks don't beat antivirus — they wait for someone to turn it off, click the wrong link, or ignore a warning. One moment of distraction is enough.
 
@@ -81,4 +96,4 @@ Start breaking, keep learning.
 
 ---
 
-Abdul Rahman — Koxns
+Abdul Rahaman — Koxns
